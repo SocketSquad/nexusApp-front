@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-const Index = lazy(() => import('../pages/Index'));
+const Index = lazy(() => import('../pages/chat'));
 
 const routes = [
     // dashboard

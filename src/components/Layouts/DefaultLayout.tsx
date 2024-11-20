@@ -2,11 +2,9 @@ import { PropsWithChildren, Suspense, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import App from '../../App';
 import { IRootState } from '../../store';
-import { toggleSidebar } from '../../store/themeConfigSlice';
 import Footer from './Footer';
 import Header from './Header';
 import Setting from './Setting';
-import Sidebar from './Sidebar';
 import Portals from '../../components/Portals';
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
@@ -49,9 +47,6 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
         <App>
             {/* BEGIN MAIN CONTAINER */}
             <div className="relative">
-                {/* sidebar menu overlay */}
-                <div className={`${(!themeConfig.sidebar && 'hidden') || ''} fixed inset-0 bg-[black]/60 z-50 lg:hidden`} onClick={() => dispatch(toggleSidebar())}></div>
-                {/* screen loader */}
                 {showLoader && (
                     <div className="screen_loader fixed inset-0 bg-[#fafafa] dark:bg-[#060818] z-[60] grid place-content-center animate__animated">
                         <svg width="64" height="64" viewBox="0 0 135 135" xmlns="http://www.w3.org/2000/svg" fill="#4361ee">
@@ -78,10 +73,7 @@ const DefaultLayout = ({ children }: PropsWithChildren) => {
                 <Setting />
                 {/* END APP SETTING LAUNCHER */}
 
-                <div className={`${themeConfig.navbar} main-container text-black dark:text-white-dark min-h-screen`}>
-                    {/* BEGIN SIDEBAR */}
-                    <Sidebar />
-                    {/* END SIDEBAR */}
+                <div className="text-black dark:text-white-dark min-h-screen">
 
                     <div className="main-content flex flex-col min-h-screen">
                         {/* BEGIN TOP NAVBAR */}

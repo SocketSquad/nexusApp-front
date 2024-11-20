@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '../../store';
-import { toggleAnimation, toggleLayout, toggleMenu, toggleNavbar, toggleRTL, toggleTheme, toggleSemidark } from '../../store/themeConfigSlice';
+import { toggleRTL, toggleTheme } from '../../store/themeConfigSlice';
 
 const Setting = () => {
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
@@ -106,56 +106,6 @@ const Setting = () => {
                         </div>
                     </div>
 
-                    <div className="border border-dashed border-white-light dark:border-[#1b2e4b] rounded-md mb-3 p-3">
-                        <h5 className="mb-1 text-base dark:text-white leading-none">Navigation Position</h5>
-                        <p className="text-white-dark text-xs">Select the primary navigation paradigm for your app.</p>
-                        <div className="grid grid-cols-3 gap-2 mt-3">
-                            <button type="button" className={`${themeConfig.menu === 'horizontal' ? 'btn-primary' : 'btn-outline-primary'} btn`} onClick={() => dispatch(toggleMenu('horizontal'))}>
-                                Horizontal
-                            </button>
-
-                            <button type="button" className={`${themeConfig.menu === 'vertical' ? 'btn-primary' : 'btn-outline-primary'} btn`} onClick={() => dispatch(toggleMenu('vertical'))}>
-                                Vertical
-                            </button>
-
-                            <button
-                                type="button"
-                                className={`${themeConfig.menu === 'collapsible-vertical' ? 'btn-primary' : 'btn-outline-primary'} btn`}
-                                onClick={() => dispatch(toggleMenu('collapsible-vertical'))}
-                            >
-                                Collapsible
-                            </button>
-                        </div>
-                        <div className="mt-5 text-primary">
-                            <label className="inline-flex mb-0">
-                                <input
-                                    type="checkbox"
-                                    className="form-checkbox"
-                                    checked={themeConfig.semidark === true || themeConfig.semidark === 'true'}
-                                    onChange={(e) => dispatch(toggleSemidark(e.target.checked))}
-                                />
-                                <span>Semi Dark (Sidebar & Header)</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div className="border border-dashed border-white-light dark:border-[#1b2e4b] rounded-md mb-3 p-3">
-                        <h5 className="mb-1 text-base dark:text-white leading-none">Layout Style</h5>
-                        <p className="text-white-dark text-xs">Select the primary layout style for your app.</p>
-                        <div className="flex gap-2 mt-3">
-                            <button
-                                type="button"
-                                className={`${themeConfig.layout === 'boxed-layout' ? 'btn-primary' : 'btn-outline-primary'} btn flex-auto`}
-                                onClick={() => dispatch(toggleLayout('boxed-layout'))}
-                            >
-                                Box
-                            </button>
-
-                            <button type="button" className={`${themeConfig.layout === 'full' ? 'btn-primary' : 'btn-outline-primary'} btn flex-auto`} onClick={() => dispatch(toggleLayout('full'))}>
-                                Full
-                            </button>
-                        </div>
-                    </div>
 
                     <div className="border border-dashed border-white-light dark:border-[#1b2e4b] rounded-md mb-3 p-3">
                         <h5 className="mb-1 text-base dark:text-white leading-none">Direction</h5>
@@ -168,62 +118,6 @@ const Setting = () => {
                             <button type="button" className={`${themeConfig.rtlClass === 'rtl' ? 'btn-primary' : 'btn-outline-primary'} btn flex-auto`} onClick={() => dispatch(toggleRTL('rtl'))}>
                                 RTL
                             </button>
-                        </div>
-                    </div>
-
-                    <div className="border border-dashed border-white-light dark:border-[#1b2e4b] rounded-md mb-3 p-3">
-                        <h5 className="mb-1 text-base dark:text-white leading-none">Navbar Type</h5>
-                        <p className="text-white-dark text-xs">Sticky or Floating.</p>
-                        <div className="mt-3 flex items-center gap-3 text-primary">
-                            <label className="inline-flex mb-0">
-                                <input
-                                    type="radio"
-                                    checked={themeConfig.navbar === 'navbar-sticky'}
-                                    value="navbar-sticky"
-                                    className="form-radio"
-                                    onChange={() => dispatch(toggleNavbar('navbar-sticky'))}
-                                />
-                                <span>Sticky</span>
-                            </label>
-                            <label className="inline-flex mb-0">
-                                <input
-                                    type="radio"
-                                    checked={themeConfig.navbar === 'navbar-floating'}
-                                    value="navbar-floating"
-                                    className="form-radio"
-                                    onChange={() => dispatch(toggleNavbar('navbar-floating'))}
-                                />
-                                <span>Floating</span>
-                            </label>
-                            <label className="inline-flex mb-0">
-                                <input
-                                    type="radio"
-                                    checked={themeConfig.navbar === 'navbar-static'}
-                                    value="navbar-static"
-                                    className="form-radio"
-                                    onChange={() => dispatch(toggleNavbar('navbar-static'))}
-                                />
-                                <span>Static</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div className="border border-dashed border-white-light dark:border-[#1b2e4b] rounded-md mb-3 p-3">
-                        <h5 className="mb-1 text-base dark:text-white leading-none">Router Transition</h5>
-                        <p className="text-white-dark text-xs">Animation of main content.</p>
-                        <div className="mt-3">
-                            <select className="form-select border-primary text-primary" value={themeConfig.animation} onChange={(e) => dispatch(toggleAnimation(e.target.value))}>
-                                <option value=" ">None</option>
-                                <option value="animate__fadeIn">Fade</option>
-                                <option value="animate__fadeInDown">Fade Down</option>
-                                <option value="animate__fadeInUp">Fade Up</option>
-                                <option value="animate__fadeInLeft">Fade Left</option>
-                                <option value="animate__fadeInRight">Fade Right</option>
-                                <option value="animate__slideInDown">Slide Down</option>
-                                <option value="animate__slideInLeft">Slide Left</option>
-                                <option value="animate__slideInRight">Slide Right</option>
-                                <option value="animate__zoomIn">Zoom In</option>
-                            </select>
                         </div>
                     </div>
                 </div>
