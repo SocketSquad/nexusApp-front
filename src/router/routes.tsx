@@ -1,12 +1,12 @@
 import { lazy } from 'react';
 const Index = lazy(() => import('../pages/chat'));
-
 const routes = [
     // dashboard
     {
         path: '/',
         element: <Index />,
         layout: 'default',
+
     },
 
 ];
