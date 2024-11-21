@@ -3,7 +3,7 @@ import { Group, GroupMember } from '../types/chat';
 
 export class GroupService {
   private static instance: GroupService;
-  private readonly baseUrl = '/api/groups';
+  private readonly baseUrl = '/groups';
 
   private constructor() {}
 

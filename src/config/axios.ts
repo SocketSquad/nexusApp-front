@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -28,8 +28,13 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (error.response?.status === 401) {
+      toast.error('Unauthorized - Please log in');
+    }
+    else{
     const message = error.response?.data?.message || 'An error occurred';
     toast.error(message);
+    }
     return Promise.reject(error);
   }
 );

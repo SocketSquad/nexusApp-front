@@ -12,6 +12,7 @@ import { Group } from '../types/chat';
 import ChatEmptyIllustration from '../components/chat/ChatEmptyIllustration';
 import UserChatView from '../components/chat/user/UserChatView';
 import GroupChatView from '../components/chat/group/GroupChatView';
+import { groupService } from '../services/groupService';
 
 const contactList = [
     {
@@ -241,45 +242,45 @@ const loginUser = {
     designation: 'Software Developer',
 };
 
-const groups = [
-    {
-        id: '1',
-        name: 'Development Team',
-        description: 'Team discussions and updates',
-        owner: 'user1',
-        members: [{ id: '1', name: 'John' }, { id: '2', name: 'Jane' }],
-        privacy: 'public' as const,
-        lastActivityAt: new Date(),
-        lastMessage: {
-            content: 'Next meeting at 2 PM',
-            sentAt: new Date(),
-        },
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        messages: [
-            {
-                id: '1',
-                senderId: '0',
-                content: 'Next meeting at 2 PM',
-                timestamp: new Date().toISOString(),
-                type: 'text',
-            },
-        ],
-    },
-    {
-        id: '2',
-        name: 'Marketing Team',
-        description: 'Team discussions and updates',
-        owner: 'user2',
-        members: [{ id: '1', name: 'John' }, { id: '2', name: 'Jane' }],
-        privacy: 'private' as const,
-        lastActivityAt: new Date(),
-        lastMessage: {
-            content: 'Next meeting at 2 PM',
-            sentAt: new Date(),
-        },
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-];
+// const groups = [
+//     {
+//         id: '1',
+//         name: 'Development Team',
+//         description: 'Team discussions and updates',
+//         owner: 'user1',
+//         members: [{ id: '1', name: 'John' }, { id: '2', name: 'Jane' }],
+//         privacy: 'public' as const,
+//         lastActivityAt: new Date(),
+//         lastMessage: {
+//             content: 'Next meeting at 2 PM',
+//             sentAt: new Date(),
+//         },
+//         avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+//         messages: [
+//             {
+//                 id: '1',
+//                 senderId: '0',
+//                 content: 'Next meeting at 2 PM',
+//                 timestamp: new Date().toISOString(),
+//                 type: 'text',
+//             },
+//         ],
+//     },
+//     {
+//         id: '2',
+//         name: 'Marketing Team',
+//         description: 'Team discussions and updates',
+//         owner: 'user2',
+//         members: [{ id: '1', name: 'John' }, { id: '2', name: 'Jane' }],
+//         privacy: 'private' as const,
+//         lastActivityAt: new Date(),
+//         lastMessage: {
+//             content: 'Next meeting at 2 PM',
+//             sentAt: new Date(),
+//         },
+//         avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+//     },
+// ];
 const Chat = () => {
     const dispatch = useDispatch();
     useEffect(() => {
@@ -298,6 +299,26 @@ const Chat = () => {
     const [selectedGroup, setSelectedGroup] = useState<any>(null);
     const [textMessage, setTextMessage] = useState('');
     const [filteredItems, setFilteredItems] = useState<any>(contactList);
+    const [groups,setGroups] = useState<Group[]>([]);
+
+    useEffect(() => {
+        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5bWFuZSBiaXNkYW91bmUiLCJzdWIiOiI2NzNjZTZhNTE4MmYyYzc2YTg5NTQ0NjUiLCJpYXQiOjE3MzIxOTIzMzMsImV4cCI6MTczMjE5NTkzM30.CE4i0dZUZgzH1LjQltTupzdLbIoIPdubEgZitbztdwI');
+      }, []);
+
+    useEffect(()=>{
+        const fetchGroups =  async() =>{
+            try{
+                const data = await groupService.getGroups();
+                setGroups(data);
+            }
+            catch(error){
+                console.error("Failed to fetch groups")
+            }
+        };
+        fetchGroups();
+    },[]);
+
+    console.log("groups",groups);
 
     useEffect(() => {
         setFilteredItems(() => {
