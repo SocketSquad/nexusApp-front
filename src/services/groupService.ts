@@ -1,5 +1,7 @@
+import { Message } from 'yup/lib/types';
 import api from '../config/axios';
 import { Group, GroupMember } from '../types/chat';
+import { toast } from 'react-toastify';
 
 export class GroupService {
   private static instance: GroupService;
@@ -20,7 +22,7 @@ export class GroupService {
   }
 
   async createGroup(groupData: Partial<Group>): Promise<Group> {
-    const { data } = await api.post<Group>(this.baseUrl, groupData);
+    const { data} = await api.post<Group>(this.baseUrl, groupData);
     return data;
   }
 
@@ -36,6 +38,12 @@ export class GroupService {
   async removeMember(groupId: string, userId: string): Promise<void> {
     await api.delete(`${this.baseUrl}/${groupId}/members/${userId}`);
   }
+
+  async sendMessage(groupId: string, content: string) : Promise<Message> {
+    const {data} =await api.post(`${this.baseUrl}/${groupId}/messages`,{content});
+    return data;
+  }
+
 }
 
 export const groupService = GroupService.getInstance();

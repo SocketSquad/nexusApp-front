@@ -7,6 +7,7 @@ import MessageInput from '../MessageInput';
 import { Group, Message, GroupMember } from '../../../types/chat';
 import ChatActions from '../ChatActions';
 import IconMoodSmile from '../../Icon/IconMoodSmile';
+import { groupService } from '../../../services/groupService';
 
 interface GroupChatViewProps {
     selectedGroup: Group;
@@ -65,6 +66,27 @@ const GroupChatView: React.FC<GroupChatViewProps> = ({
         }
     };
 
+    // Function to send a message
+
+     sendMessage = async () =>{
+
+        if(!textMessage.trim()) return
+        try{
+            const newMessage = await groupService.sendMessage(selectedGroup._id,textMessage);
+            setTextMessage('');
+        }
+        catch(error){
+            console.error('Failed to send message: ',error);
+        }
+    }
+
+    sendMessageHandle = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    };
+
+
     return (
         <div className="relative h-full">
             {/* Header */}
@@ -111,7 +133,8 @@ const GroupChatView: React.FC<GroupChatViewProps> = ({
                     <div className="block m-6 mt-0">
                         <h4 className="text-xs text-center border-b border-[#f4f4f4] dark:border-gray-800 relative">
                             <span className="relative top-2 px-3 bg-white dark:bg-black">
-                                {'Today, ' + new Date(selectedGroup.lastActivityAt).toLocaleTimeString()}
+                                {new Date(selectedGroup.lastActivityAt).toLocaleString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) + ' ' + new Date(selectedGroup.lastActivityAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                
                             </span>
                         </h4>
                     </div>
@@ -119,7 +142,7 @@ const GroupChatView: React.FC<GroupChatViewProps> = ({
                     {selectedGroup.messages?.map((message: Message, index: number) => {
                         const isOwnMessage = message.senderId === loginUser.id;
                         const memberInfo = getMemberInfo(message.senderId);
-
+                       
                         return (
                             <div key={message.id || index}>
                                 <div className={`flex items-start gap-3 ${isOwnMessage ? 'justify-end' : ''}`}>
@@ -149,7 +172,7 @@ const GroupChatView: React.FC<GroupChatViewProps> = ({
                                         <div className={`flex items-center gap-2 text-xs text-white-dark 
                                             ${isOwnMessage ? 'ltr:text-right rtl:text-left justify-end' : ''}`}
                                         >
-                                            <span>{getTimeAgo(message.timestamp)}</span>
+                                            <span>{getTimeAgo(message.createdAt)}</span>
                                             {message.isEdited && (
                                                 <>
                                                     <span>•</span>
@@ -171,7 +194,7 @@ const GroupChatView: React.FC<GroupChatViewProps> = ({
                 setTextMessage={setTextMessage}
                 sendMessageHandle={sendMessageHandle}
                 sendMessage={sendMessage}
-            />
+            />        
         </div>
     );
 };

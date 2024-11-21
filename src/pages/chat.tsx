@@ -242,45 +242,7 @@ const loginUser = {
     designation: 'Software Developer',
 };
 
-// const groups = [
-//     {
-//         id: '1',
-//         name: 'Development Team',
-//         description: 'Team discussions and updates',
-//         owner: 'user1',
-//         members: [{ id: '1', name: 'John' }, { id: '2', name: 'Jane' }],
-//         privacy: 'public' as const,
-//         lastActivityAt: new Date(),
-//         lastMessage: {
-//             content: 'Next meeting at 2 PM',
-//             sentAt: new Date(),
-//         },
-//         avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-//         messages: [
-//             {
-//                 id: '1',
-//                 senderId: '0',
-//                 content: 'Next meeting at 2 PM',
-//                 timestamp: new Date().toISOString(),
-//                 type: 'text',
-//             },
-//         ],
-//     },
-//     {
-//         id: '2',
-//         name: 'Marketing Team',
-//         description: 'Team discussions and updates',
-//         owner: 'user2',
-//         members: [{ id: '1', name: 'John' }, { id: '2', name: 'Jane' }],
-//         privacy: 'private' as const,
-//         lastActivityAt: new Date(),
-//         lastMessage: {
-//             content: 'Next meeting at 2 PM',
-//             sentAt: new Date(),
-//         },
-//         avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-//     },
-// ];
+
 const Chat = () => {
     const dispatch = useDispatch();
     useEffect(() => {
@@ -288,22 +250,50 @@ const Chat = () => {
     });
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
 
-    const [activeTab, setActiveTab] = useState('chats');
-    const [selectedGroupId, setSelectedGroupId] = useState<string>();
+    //Saving activeTab in localstorage
+    const [activeTab, setActiveTab] = useState(()=>localStorage.getItem('activeTab') || 'chats');
+  
+    useEffect(()=>{
+        localStorage.setItem('activeTab',activeTab);
+    }, [activeTab]);
 
-    const [isShowChatMenu, setIsShowChatMenu] = useState(false);
+    //Saving selected group id in localstorage
+
+    const [selectedGroupId, setSelectedGroupId] = useState<string>(() => localStorage.getItem('selectedGroupId') || '');
+    useEffect(()=>{
+    localStorage.setItem('selectedGroupId', selectedGroupId); 
+    },[selectedGroupId]);
+    console.log("selectedGroupId: ",selectedGroupId);
+
+    //Saving showing chat/group chat in localstorage
+    
+    const [isShowUserChat, setIsShowUserChat] = useState(() => JSON.parse(localStorage.getItem('isShowUserChat') || 'false'));
+    const [isShowGroupChat, setIsShowGroupChat] = useState(() => JSON.parse(localStorage.getItem('isShowGroupChat') || 'false'));
+    const [isShowChatMenu, setIsShowChatMenu] =  useState(() => JSON.parse(localStorage.getItem('isShowChatMenu') || 'false'));
+    useEffect(()=>{
+        localStorage.setItem('isShowUserChat', JSON.stringify(isShowUserChat));  
+        localStorage.setItem('isShowGroupChat', JSON.stringify(isShowGroupChat));
+        localStorage.setItem('isShowChatMenu', JSON.stringify(isShowChatMenu));
+    },[isShowUserChat, isShowGroupChat,isShowChatMenu])
+
+
+   
     const [searchUser, setSearchUser] = useState('');
-    const [isShowUserChat, setIsShowUserChat] = useState(false);
-    const [isShowGroupChat, setIsShowGroupChat] = useState(false);
+
     const [selectedUser, setSelectedUser] = useState<any>(null);
     const [selectedGroup, setSelectedGroup] = useState<any>(null);
     const [textMessage, setTextMessage] = useState('');
     const [filteredItems, setFilteredItems] = useState<any>(contactList);
     const [groups,setGroups] = useState<Group[]>([]);
 
+   
+
+
     useEffect(() => {
-        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5bWFuZSBiaXNkYW91bmUiLCJzdWIiOiI2NzNjZTZhNTE4MmYyYzc2YTg5NTQ0NjUiLCJpYXQiOjE3MzIxOTYwOTIsImV4cCI6MTczMjE5OTY5Mn0.MLiDCkFfzuSL5shSwBD_TwAZiAYKHkl36PRT7oD1Yrk');
+        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5bWFuZSBiaXNkYW91bmUiLCJzdWIiOiI2NzNjZTZhNTE4MmYyYzc2YTg5NTQ0NjUiLCJpYXQiOjE3MzIyMjI5MDEsImV4cCI6MTczMjI0MDkwMX0.BVjNPfEy62gY1xhivnqjKAnYxOIPC9_LqQsxZoM71Vw');
       }, []);
+
+    // Fetching groups from the backend
 
     useEffect(()=>{
         const fetchGroups =  async() =>{
@@ -318,7 +308,7 @@ const Chat = () => {
         fetchGroups();
     },[]);
 
-    console.log("groups",groups);
+    
 
     useEffect(() => {
         setFilteredItems(() => {
@@ -375,10 +365,8 @@ const Chat = () => {
         setSelectedUser(null);
         scrollToBottom();
         setIsShowChatMenu(false);
-        setSelectedGroupId(group.id);
+        setSelectedGroupId(group._id);
     };
-
-    console.log("selectedGroup",selectedGroup);
 
 
     return (

@@ -17,7 +17,7 @@ export interface GroupMember {
   }
   
   export interface Group {
-    id: string;
+    _id: string;
     name: string;
     description?: string;
     owner: string;
@@ -33,7 +33,7 @@ export interface GroupMember {
     id: string;
     senderId: string;
     content: string;
-    timestamp: string;
+    createdAt: any;
     type: 'text' | 'image' | 'file';
     hasAttachments?: boolean;
     isEdited?: boolean;
