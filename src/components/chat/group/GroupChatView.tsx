@@ -4,8 +4,8 @@ import IconLock from '../../Icon/IconLock';
 import IconGlobe from '../../Icon/IconGlobe';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import MessageInput from '../MessageInput';
-import { Group, Message, GroupMember } from '../../../types/chat';
-import ChatActions from '../ChatActions';
+import { Group, Message } from '../../../types/chat';
+import GroupChatActions from './GroupChatActions';
 import IconMoodSmile from '../../Icon/IconMoodSmile';
 import { groupService } from '../../../services/groupService';
 
@@ -20,6 +20,8 @@ interface GroupChatViewProps {
     setIsShowChatMenu: (show: boolean) => void;
     isShowChatMenu: boolean;
 }
+
+
 
 const GroupChatView: React.FC<GroupChatViewProps> = ({
     selectedGroup,
@@ -52,7 +54,7 @@ const GroupChatView: React.FC<GroupChatViewProps> = ({
         const now = new Date();
         const messageDate = new Date(timestamp);
         const diffInSeconds = Math.floor((now.getTime() - messageDate.getTime()) / 1000);
-        
+
         if (diffInSeconds < 60) {
             return 'just now';
         } else if (diffInSeconds < 3600) {
@@ -86,6 +88,26 @@ const GroupChatView: React.FC<GroupChatViewProps> = ({
         }
     };
 
+
+
+
+    const handleUpdateGroup = async (groupId: string, data: FormData) => {
+        try {
+            const updateMessage = await groupService.updateGroup(groupId,data);
+        } catch (error) {
+            console.error('Error updating group:', error);
+        }
+    };
+
+    const handleDeleteGroup = async (groupId: string) => {
+            try {
+                await groupService.deleteGroup(groupId);
+                console.log('Group deleted successfully');
+            } catch (error) {
+                console.error('Error deleting group:', error);
+            }
+        
+    };
 
     return (
         <div className="relative h-full">
@@ -122,7 +144,18 @@ const GroupChatView: React.FC<GroupChatViewProps> = ({
                         </p>
                     </div>
                 </div>
-                <ChatActions isRtl={isRtl} />
+                <GroupChatActions
+                    isRtl={false}
+                    currentGroup={{
+                        id: selectedGroup._id,
+                        name: selectedGroup.name,
+                        description: selectedGroup.description,
+                        privacy: selectedGroup.privacy,
+                        
+                    }}
+                    onUpdateGroup={handleUpdateGroup}
+                    onDeleteGroup={handleDeleteGroup}
+                />
             </div>
 
             <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]"></div>

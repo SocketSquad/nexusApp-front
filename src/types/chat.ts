@@ -3,9 +3,11 @@ export type MessageType = 'text' | 'image' | 'file';
 
 export interface GroupMember {
     userId: string;
+    name: string;
     role: 'admin' | 'member';
     joinedAt: Date;
     lastRead: Date;
+    avatar?: string;
   }
   
   export interface GroupLastMessage {

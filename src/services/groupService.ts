@@ -21,13 +21,23 @@ export class GroupService {
     return data;
   }
 
+  async getGroupById(groupId: string): Promise<Group[]> {
+    const { data } = await api.get<Group[]>(`${this.baseUrl}/${groupId}`);
+    return data;
+  }
+
   async createGroup(groupData: Partial<Group>): Promise<Group> {
     const { data} = await api.post<Group>(this.baseUrl, groupData);
     return data;
   }
 
   async updateGroup(groupId: string, updates: Partial<Group>): Promise<Group> {
-    const { data } = await api.patch<Group>(`${this.baseUrl}/${groupId}`, updates);
+    const { data } = await api.put<Group>(`${this.baseUrl}/${groupId}`, updates);
+    return data;
+  }
+
+  async deleteGroup(groupId: string): Promise<Group> {
+    const { data } = await api.delete<Group>(`${this.baseUrl}/${groupId}`);
     return data;
   }
 
