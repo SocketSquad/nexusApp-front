@@ -247,7 +247,7 @@ const groups = [
         name: 'Development Team',
         description: 'Team discussions and updates',
         owner: 'user1',
-        members: [{ id: '1', name: 'John' }, { id: '2', name: 'Jane' }],
+        members: [{ userId: '1', name: 'John', role: 'admin' }, { userId: '2', name: 'Jane', role: 'member' }],
         privacy: 'public' as const,
         lastActivityAt: new Date(),
         lastMessage: {
@@ -259,6 +259,13 @@ const groups = [
             {
                 id: '1',
                 senderId: '0',
+                content: 'Next meeting at 2 PM',
+                timestamp: new Date().toISOString(),
+                type: 'text',
+            },
+            {
+                id: '2',
+                senderId: '1',
                 content: 'Next meeting at 2 PM',
                 timestamp: new Date().toISOString(),
                 type: 'text',
