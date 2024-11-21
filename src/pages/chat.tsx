@@ -302,7 +302,7 @@ const Chat = () => {
     const [groups,setGroups] = useState<Group[]>([]);
 
     useEffect(() => {
-        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5bWFuZSBiaXNkYW91bmUiLCJzdWIiOiI2NzNjZTZhNTE4MmYyYzc2YTg5NTQ0NjUiLCJpYXQiOjE3MzIxOTIzMzMsImV4cCI6MTczMjE5NTkzM30.CE4i0dZUZgzH1LjQltTupzdLbIoIPdubEgZitbztdwI');
+        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5bWFuZSBiaXNkYW91bmUiLCJzdWIiOiI2NzNjZTZhNTE4MmYyYzc2YTg5NTQ0NjUiLCJpYXQiOjE3MzIxOTYwOTIsImV4cCI6MTczMjE5OTY5Mn0.MLiDCkFfzuSL5shSwBD_TwAZiAYKHkl36PRT7oD1Yrk');
       }, []);
 
     useEffect(()=>{
@@ -377,6 +377,8 @@ const Chat = () => {
         setIsShowChatMenu(false);
         setSelectedGroupId(group.id);
     };
+
+    console.log("selectedGroup",selectedGroup);
 
 
     return (
