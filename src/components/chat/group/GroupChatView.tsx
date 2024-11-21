@@ -4,8 +4,8 @@ import IconLock from '../../Icon/IconLock';
 import IconGlobe from '../../Icon/IconGlobe';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import MessageInput from '../MessageInput';
-import { Group, Message, GroupMember } from '../../../types/chat';
-import ChatActions from '../ChatActions';
+import { Group, Message } from '../../../types/chat';
+import GroupChatActions from './GroupChatActions';
 import IconMoodSmile from '../../Icon/IconMoodSmile';
 
 interface GroupChatViewProps {
@@ -19,6 +19,8 @@ interface GroupChatViewProps {
     setIsShowChatMenu: (show: boolean) => void;
     isShowChatMenu: boolean;
 }
+
+
 
 const GroupChatView: React.FC<GroupChatViewProps> = ({
     selectedGroup,
@@ -51,7 +53,7 @@ const GroupChatView: React.FC<GroupChatViewProps> = ({
         const now = new Date();
         const messageDate = new Date(timestamp);
         const diffInSeconds = Math.floor((now.getTime() - messageDate.getTime()) / 1000);
-        
+
         if (diffInSeconds < 60) {
             return 'just now';
         } else if (diffInSeconds < 3600) {
@@ -62,6 +64,23 @@ const GroupChatView: React.FC<GroupChatViewProps> = ({
             return `${hours}h ago`;
         } else {
             return formatMessageTime(timestamp);
+        }
+    };
+
+    const currentGroup = {
+        id: '1',
+        name: 'Group Name',
+        description: 'Group Description',
+        privacy: 'public' as const,
+        avatar: 'url-to-avatar'
+    };
+
+    const handleUpdateGroup = async (groupId: string, data: FormData) => {
+        try {
+            // Votre logique de mise à jour
+            console.log('Updating group:', groupId, data);
+        } catch (error) {
+            console.error('Error updating group:', error);
         }
     };
 
@@ -100,7 +119,11 @@ const GroupChatView: React.FC<GroupChatViewProps> = ({
                         </p>
                     </div>
                 </div>
-                <ChatActions isRtl={isRtl} />
+                <GroupChatActions
+                    isRtl={false}
+                    currentGroup={currentGroup}
+                    onUpdateGroup={handleUpdateGroup}
+                />
             </div>
 
             <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]"></div>
