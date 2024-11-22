@@ -54,7 +54,7 @@ jobs:
           curl -X POST \
             -H 'Content-type: application/json' \
             -H 'Authorization: Bearer ${{ secrets.SLACK_FRONT_TOKEN}}' \
-            --data "{\"channel\":\"#nexus-app-back-tests\",\"text\":\"$message\"}" \
+            --data "{\"channel\":\"#nexus-app-front-tests\",\"text\":\"$message\"}" \
             https://slack.com/api/chat.postMessage
 
       - name: Slack Notification on Test Failure
@@ -70,7 +70,7 @@ jobs:
           curl -X POST \
             -H 'Content-type: application/json' \
             -H 'Authorization: Bearer ${{ secrets.SLACK_FRONT_TOKEN}}' \
-            --data "{\"channel\":\"#nexus-app-back-tests\",\"text\":\"$message\"}" \
+            --data "{\"channel\":\"#nexus-app-front-tests\",\"text\":\"$message\"}" \
             https://slack.com/api/chat.postMessage
 
   sonar-analysis:
