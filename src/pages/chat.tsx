@@ -247,7 +247,7 @@ const groups = [
         name: 'Development Team',
         description: 'Team discussions and updates',
         owner: 'user1',
-        members: [{ id: '1', name: 'John' }, { id: '2', name: 'Jane' }],
+        members: [{ userId: '1', name: 'John', role: 'admin' }, { userId: '2', name: 'Jane', role: 'member' }],
         privacy: 'public' as const,
         lastActivityAt: new Date(),
         lastMessage: {
@@ -259,6 +259,13 @@ const groups = [
             {
                 id: '1',
                 senderId: '0',
+                content: 'Next meeting at 2 PM',
+                timestamp: new Date().toISOString(),
+                type: 'text',
+            },
+            {
+                id: '2',
+                senderId: '1',
                 content: 'Next meeting at 2 PM',
                 timestamp: new Date().toISOString(),
                 type: 'text',
@@ -359,7 +366,7 @@ const Chat = () => {
 
 
     return (
-        <div>
+
             <div className={`flex gap-5 relative sm:h-[calc(100vh_-_150px)] h-full sm:min-h-0 ${isShowChatMenu ? 'min-h-[999px]' : ''}`}>
                 <div className={`panel p-4 flex-none max-w-sm w-full absolute xl:relative z-10 space-y-4 xl:h-full hidden xl:block overflow-hidden ${isShowChatMenu ? '!block' : ''}`}>
                     <ChatHeader isRtl={isRtl} />
@@ -458,7 +465,6 @@ const Chat = () => {
                     )}
                 </div>
             </div>
-        </div>
     );
 };
 
