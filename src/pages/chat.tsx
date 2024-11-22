@@ -281,7 +281,7 @@ const Chat = () => {
 
 
     useEffect(() => {
-        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5bWFuZSBiaXNkYW91bmUiLCJzdWIiOiI2NzNjZTZhNTE4MmYyYzc2YTg5NTQ0NjUiLCJpYXQiOjE3MzIyNjI1NDUsImV4cCI6MTczMjI4MDU0NX0.Knafe6v6JxoxWdKXxZKdsANZ6iDgSHCourgtbFIoXqc ');
+        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5bWFuZSBiaXNkYW91bmUiLCJzdWIiOiI2NzNjZTZhNTE4MmYyYzc2YTg5NTQ0NjUiLCJpYXQiOjE3MzIyODc5NzksImV4cCI6MTczMjMwNTk3OX0.DxTFrlGoVLXxf2IzwAy4QZWATgKyvWDZM4Rd04zsa74      ');
       }, []);
 
     // Fetching groups from the backend

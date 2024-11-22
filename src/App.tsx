@@ -2,7 +2,6 @@ import { PropsWithChildren, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from './store';
 import { toggleRTL, toggleTheme, toggleAnimation } from './store/themeConfigSlice';
-import 'react-toastify/dist/ReactToastify.css';
 import { Toaster } from 'sonner';
 
 function App({ children }: PropsWithChildren) {
