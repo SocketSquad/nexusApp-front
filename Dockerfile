@@ -1,34 +1,32 @@
+# Build stage
 FROM node:20-alpine AS build
 
-#declare build time environment variables
-ARG VITE_API_URL
-
-#set environment variables
-ENV VITE_API_URL=$VITE_API_URL
-
-# Build App
 WORKDIR /app
 
+# Copy package files first for better caching
 COPY package*.json ./
 
-COPY . .
-
+# Install dependencies
 RUN npm install --legacy-peer-deps
 
-EXPOSE 3000
+# Copy the rest of the application
+COPY . .
 
-CMD ["npm", "run", "build"]
+# Build the application
+RUN npm run build
 
-#serve with nginx
+# Nginx stage
 FROM nginx:1.23-alpine
-
 WORKDIR /usr/share/nginx/html
 
+# Remove default nginx static files
 RUN rm -rf ./*
 
+# Copy build files from the build stage
 COPY --from=build /app/build .
 
+# Expose port 80
 EXPOSE 80
 
-ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
-
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
