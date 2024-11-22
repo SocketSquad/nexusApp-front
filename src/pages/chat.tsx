@@ -265,19 +265,14 @@ const Chat = () => {
     },[selectedGroupId]);
     console.log("selectedGroupId: ",selectedGroupId);
 
-    //Saving showing chat/group chat in localstorage
     
-    const [isShowUserChat, setIsShowUserChat] = useState(() => JSON.parse(localStorage.getItem('isShowUserChat') || 'false'));
-    const [isShowGroupChat, setIsShowGroupChat] = useState(() => JSON.parse(localStorage.getItem('isShowGroupChat') || 'false'));
-    const [isShowChatMenu, setIsShowChatMenu] =  useState(() => JSON.parse(localStorage.getItem('isShowChatMenu') || 'false'));
-    useEffect(()=>{
-        localStorage.setItem('isShowUserChat', JSON.stringify(isShowUserChat));  
-        localStorage.setItem('isShowGroupChat', JSON.stringify(isShowGroupChat));
-        localStorage.setItem('isShowChatMenu', JSON.stringify(isShowChatMenu));
-    },[isShowUserChat, isShowGroupChat,isShowChatMenu])
+    
 
 
-   
+    const [isShowChatMenu, setIsShowChatMenu] = useState(false);
+    const [isShowUserChat, setIsShowUserChat] = useState(false);
+    const [isShowGroupChat, setIsShowGroupChat] = useState(false);
+ 
     const [searchUser, setSearchUser] = useState('');
 
     const [selectedUser, setSelectedUser] = useState<any>(null);
@@ -290,7 +285,7 @@ const Chat = () => {
 
 
     useEffect(() => {
-        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5bWFuZSBiaXNkYW91bmUiLCJzdWIiOiI2NzNjZTZhNTE4MmYyYzc2YTg5NTQ0NjUiLCJpYXQiOjE3MzIyMjI5MDEsImV4cCI6MTczMjI0MDkwMX0.BVjNPfEy62gY1xhivnqjKAnYxOIPC9_LqQsxZoM71Vw');
+        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5bWFuZSBiaXNkYW91bmUiLCJzdWIiOiI2NzNjZTZhNTE4MmYyYzc2YTg5NTQ0NjUiLCJpYXQiOjE3MzIyNjI1NDUsImV4cCI6MTczMjI4MDU0NX0.Knafe6v6JxoxWdKXxZKdsANZ6iDgSHCourgtbFIoXqc ');
       }, []);
 
     // Fetching groups from the backend
