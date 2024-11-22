@@ -137,7 +137,7 @@ export default function AddMemberForm({ onSubmit, onClose }: AddMemberFormProps)
                     onClick={onClose}
                     className="
             flex-1 px-4 py-2.5
-            border border-slate-300 
+            border border-slate-300 dark:border-slate-700
             text-slate-900 dark:text-white font-medium
             rounded-lg 
             hover:bg-slate-50 dark:hover:bg-slate-700 

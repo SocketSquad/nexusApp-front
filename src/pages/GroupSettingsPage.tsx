@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import GroupSettings from '../components/chat/group/GroupSettings';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import type { Group } from '../types/chat';
 import { groupService } from '../services/groupService';
 import { useParams} from 'react-router-dom';
@@ -46,23 +48,35 @@ const GroupSettingsPage = ({ isRtl }: GroupSettingsPageProps) => {
     await groupService.removeMember(groupId,'673ce6a5182f2c76a8954465');
   };
 
-  if (isLoading) {
-    return <div>Loading group details...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  const handleBack = () => {
+    navigate('/');
+  };
 
   return (
-    <div className="bg-white dark:bg-black-dark-light">
-      <GroupSettings
-        group={group}
-        currentUserId="673ce6a5182f2c76a8954465"
-        onAddMember={handleAddMember}
-        onLeaveGroup={handleLeaveGroup}
-        isRtl={isRtl || false}
-      />
+    <div className="bg-transparent">
+      <div className="mx-auto px-4 pt-2">
+        <div className="mb-6">
+          <button
+            onClick={handleBack}
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg hover:bg-gray-50 hover:text-gray-900 dark:hover:bg-slate-700 dark:hover:text-gray-100 transition-colors duration-200 group"
+          >
+            {isRtl ? (
+              <ArrowRight className="w-4 h-4 mr-2 transition-transform text-purple-500 duration-200 group-hover:translate-x-0.5" />
+            ) : (
+              <ArrowLeft className="w-4 h-4 mr-2 transition-transform text-purple-500 duration-200 group-hover:-translate-x-0.5" />
+            )}
+            Back to Chat
+          </button>
+        </div>
+        
+        <GroupSettings
+          group={mockGroup}
+          currentUserId="user1"
+          onAddMember={handleAddMember}
+          onLeaveGroup={handleLeaveGroup}
+          isRtl={isRtl || false}
+        />
+      </div>
     </div>
   );
 }
