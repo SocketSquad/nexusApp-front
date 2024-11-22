@@ -12,6 +12,7 @@ import { Group } from '../types/chat';
 import ChatEmptyIllustration from '../components/chat/ChatEmptyIllustration';
 import UserChatView from '../components/chat/user/UserChatView';
 import GroupChatView from '../components/chat/group/GroupChatView';
+import { groupService } from '../services/groupService';
 
 const contactList = [
     {
@@ -241,52 +242,7 @@ const loginUser = {
     designation: 'Software Developer',
 };
 
-const groups = [
-    {
-        id: '1',
-        name: 'Development Team',
-        description: 'Team discussions and updates',
-        owner: 'user1',
-        members: [{ userId: '1', name: 'John', role: 'admin' }, { userId: '2', name: 'Jane', role: 'member' }],
-        privacy: 'public' as const,
-        lastActivityAt: new Date(),
-        lastMessage: {
-            content: 'Next meeting at 2 PM',
-            sentAt: new Date(),
-        },
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        messages: [
-            {
-                id: '1',
-                senderId: '0',
-                content: 'Next meeting at 2 PM',
-                timestamp: new Date().toISOString(),
-                type: 'text',
-            },
-            {
-                id: '2',
-                senderId: '1',
-                content: 'Next meeting at 2 PM',
-                timestamp: new Date().toISOString(),
-                type: 'text',
-            },
-        ],
-    },
-    {
-        id: '2',
-        name: 'Marketing Team',
-        description: 'Team discussions and updates',
-        owner: 'user2',
-        members: [{ id: '1', name: 'John' }, { id: '2', name: 'Jane' }],
-        privacy: 'private' as const,
-        lastActivityAt: new Date(),
-        lastMessage: {
-            content: 'Next meeting at 2 PM',
-            sentAt: new Date(),
-        },
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-];
+
 const Chat = () => {
     const dispatch = useDispatch();
     useEffect(() => {
@@ -294,17 +250,56 @@ const Chat = () => {
     });
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
 
-    const [activeTab, setActiveTab] = useState('chats');
-    const [selectedGroupId, setSelectedGroupId] = useState<string>();
+    //Saving activeTab in localstorage
+    const [activeTab, setActiveTab] = useState(()=>localStorage.getItem('activeTab') || 'chats');
+  
+    useEffect(()=>{
+        localStorage.setItem('activeTab',activeTab);
+    }, [activeTab]);
+
+    //Saving selected group id in localstorage
+
+    const [selectedGroupId, setSelectedGroupId] = useState<string>(() => localStorage.getItem('selectedGroupId') || '');
+    useEffect(()=>{
+    localStorage.setItem('selectedGroupId', selectedGroupId); 
+    },[selectedGroupId]);
+    console.log("selectedGroupId: ",selectedGroupId);
+
+    
 
     const [isShowChatMenu, setIsShowChatMenu] = useState(false);
-    const [searchUser, setSearchUser] = useState('');
     const [isShowUserChat, setIsShowUserChat] = useState(false);
     const [isShowGroupChat, setIsShowGroupChat] = useState(false);
+    const [searchUser, setSearchUser] = useState('');
     const [selectedUser, setSelectedUser] = useState<any>(null);
     const [selectedGroup, setSelectedGroup] = useState<any>(null);
     const [textMessage, setTextMessage] = useState('');
     const [filteredItems, setFilteredItems] = useState<any>(contactList);
+    const [groups,setGroups] = useState<Group[]>([]);
+
+   
+
+
+    useEffect(() => {
+        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5bWFuZSBiaXNkYW91bmUiLCJzdWIiOiI2NzNjZTZhNTE4MmYyYzc2YTg5NTQ0NjUiLCJpYXQiOjE3MzIyODc5NzksImV4cCI6MTczMjMwNTk3OX0.DxTFrlGoVLXxf2IzwAy4QZWATgKyvWDZM4Rd04zsa74      ');
+      }, []);
+
+    // Fetching groups from the backend
+
+    useEffect(()=>{
+        const fetchGroups =  async() =>{
+            try{
+                const data = await groupService.getGroups();
+                setGroups(data);
+            }
+            catch(error){
+                console.error("Failed to fetch groups")
+            }
+        };
+        fetchGroups();
+    },[]);
+
+    
 
     useEffect(() => {
         setFilteredItems(() => {
@@ -361,7 +356,7 @@ const Chat = () => {
         setSelectedUser(null);
         scrollToBottom();
         setIsShowChatMenu(false);
-        setSelectedGroupId(group.id);
+        setSelectedGroupId(group._id);
     };
 
 

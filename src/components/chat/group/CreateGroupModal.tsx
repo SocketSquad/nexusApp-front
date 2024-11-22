@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Lock, Globe, X, Upload } from 'lucide-react';
+import { groupService } from '../../../services/groupService';
 
 interface CreateGroupModalProps {
   isOpen: boolean;
@@ -13,24 +14,23 @@ const CreateGroupModal = ({ isOpen, onClose }: CreateGroupModalProps) => {
     name: '',
     description: '',
     privacy: 'public' as 'public' | 'private',
-    avatar: null as File | null,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFormData(prev => ({ ...prev, avatar: file }));
-      setPreviewUrl(URL.createObjectURL(file));
-    }
-  };
+  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     setFormData(prev => ({ ...prev, avatar: file }));
+  //     setPreviewUrl(URL.createObjectURL(file));
+  //   }
+  // };
 
   const resetForm = () => {
     setFormData({
       name: '',
       description: '',
       privacy: 'public',
-      avatar: null,
+
     });
     setPreviewUrl('');
     setErrors({});
@@ -51,7 +51,8 @@ const CreateGroupModal = ({ isOpen, onClose }: CreateGroupModalProps) => {
         return;
       }
 
-      // TODO: Implement your group creation logic here
+      // Creating group in backend
+      const newGroup = await groupService.createGroup(formData);
       
       onClose();
       resetForm();
@@ -82,7 +83,7 @@ const CreateGroupModal = ({ isOpen, onClose }: CreateGroupModalProps) => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Image Upload */}
-          <div className="flex justify-center">
+          {/* <div className="flex justify-center">
             <div className="relative w-32 h-32">
               <div className="w-full h-full rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
                 {previewUrl ? (
@@ -100,7 +101,7 @@ const CreateGroupModal = ({ isOpen, onClose }: CreateGroupModalProps) => {
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
             </div>
-          </div>
+          </div> */}
 
           {/* Group Name */}
           <div>
