@@ -40,6 +40,7 @@ jobs:
                     -H "Authorization: Bearer ${{ secrets.SLACK_FRONT_TOKEN }}" \
                     --data "{\"channel\":\"#nexus-app-front-deployment\",\"text\":\"$message\"}" \
                     https://slack.com/api/chat.postMessage
+                    
 
             - name: Rollback on Deployment Failure
               if: failure()
