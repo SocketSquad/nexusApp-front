@@ -266,15 +266,11 @@ const Chat = () => {
     console.log("selectedGroupId: ",selectedGroupId);
 
     
-    
-
 
     const [isShowChatMenu, setIsShowChatMenu] = useState(false);
     const [isShowUserChat, setIsShowUserChat] = useState(false);
     const [isShowGroupChat, setIsShowGroupChat] = useState(false);
- 
     const [searchUser, setSearchUser] = useState('');
-
     const [selectedUser, setSelectedUser] = useState<any>(null);
     const [selectedGroup, setSelectedGroup] = useState<any>(null);
     const [textMessage, setTextMessage] = useState('');
