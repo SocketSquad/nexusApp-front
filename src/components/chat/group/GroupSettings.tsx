@@ -46,7 +46,7 @@ export default function GroupSettings({ group, currentUserId, onAddMember, onLea
 
   return (
     <>
-      <div className="max-w-2xl h-full mx-auto p-8 bg-white dark:bg-black-dark-light rounded-2xl shadow-lg border border-slate-200 dark:border-slate-800">
+      <div className="max-w-2xl h-full mx-auto p-8 bg-white dark:bg-black rounded-2xl shadow-lg border border-slate-200 dark:border-slate-800">
         <div className="space-y-8">
           {/* Header */}
           <div className="flex items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-700">
