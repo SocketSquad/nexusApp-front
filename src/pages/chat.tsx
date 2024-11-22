@@ -366,7 +366,7 @@ const Chat = () => {
 
 
     return (
-        <div>
+
             <div className={`flex gap-5 relative sm:h-[calc(100vh_-_150px)] h-full sm:min-h-0 ${isShowChatMenu ? 'min-h-[999px]' : ''}`}>
                 <div className={`panel p-4 flex-none max-w-sm w-full absolute xl:relative z-10 space-y-4 xl:h-full hidden xl:block overflow-hidden ${isShowChatMenu ? '!block' : ''}`}>
                     <ChatHeader isRtl={isRtl} />
@@ -465,7 +465,6 @@ const Chat = () => {
                     )}
                 </div>
             </div>
-        </div>
     );
 };
 

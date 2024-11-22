@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Dropdown from '../../Dropdown';
 import IconPhoneCall from '../../Icon/IconPhoneCall';
 import IconShare from '../../Icon/IconShare';
@@ -29,6 +30,7 @@ const GroupChatActions = ({
     onUpdateGroup 
 }: IGroupChatActionsProps) => {
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const navigate = useNavigate();
     
     return (
         <>
@@ -60,7 +62,7 @@ const GroupChatActions = ({
                                 </button>
                             </li>
                             <li>
-                                <button type="button">
+                                <button type="button" onClick={() => navigate(`/group/${currentGroup?.id}/settings`)}>
                                     <IconSettings className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
                                     Settings
                                 </button>
