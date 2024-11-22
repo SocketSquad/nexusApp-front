@@ -1,4 +1,4 @@
-import {Crown, Shield, Search } from 'lucide-react';
+import { Crown, Shield, Search } from 'lucide-react';
 import type { Group } from '../../../types/chat';
 import Modal from '../../Modal';
 import AddMemberForm from './AddMemberForm';
@@ -54,28 +54,28 @@ export default function GroupSettings({ group, currentUserId, onAddMember, onLea
               Group Settings
             </h1>
             <div className="dropdown">
-                <Dropdown
-                    placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
-                    btnClassName="bg-[#f4f4f4] dark:bg-slate-800 hover:bg-primary-light w-8 h-8 rounded-full !flex justify-center items-center"
-                    button={<IconHorizontalDots className="hover:text-primary rotate-90 opacity-70" />}
-                >
-                    <ul className="text-black w-[10rem] dark:text-white-dark">
-                        <li>
-                        {isCurrentUserAdmin && (
-                            <button type="button" onClick={() => setIsAddMemberModalOpen(true)}>
-                                <IconUserPlus className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                Add Member
-                            </button>
-                        )}
-                        </li>
-                        <li>
-                            <button type="button" onClick={onLeaveGroup}>
-                                <IconLogout className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                Exit Group
-                            </button>
-                        </li>
-                    </ul>
-                </Dropdown>
+              <Dropdown
+                placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
+                btnClassName="bg-[#f4f4f4] dark:bg-slate-800 hover:bg-primary-light w-8 h-8 rounded-full !flex justify-center items-center"
+                button={<IconHorizontalDots className="hover:text-primary rotate-90 opacity-70" />}
+              >
+                <ul className="text-black w-[10rem] dark:text-white-dark">
+                  <li>
+                    {isCurrentUserAdmin && (
+                      <button type="button" onClick={() => setIsAddMemberModalOpen(true)}>
+                        <IconUserPlus className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                        Add Member
+                      </button>
+                    )}
+                  </li>
+                  <li>
+                    <button type="button" onClick={onLeaveGroup}>
+                      <IconLogout className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                      Exit Group
+                    </button>
+                  </li>
+                </ul>
+              </Dropdown>
             </div>
           </div>
 
@@ -123,18 +123,58 @@ export default function GroupSettings({ group, currentUserId, onAddMember, onLea
                           )}
                         </div>
                         <div className="ml-4 flex-grow">
-                          <div className="flex items-center gap-3">
-                            <span className="font-semibold text-slate-900 dark:text-white">{member.name}</span>
-                            {member.role === 'admin' && (
-                              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-                                <Shield className="w-3.5 h-3.5" />
-                                Admin
-                              </span>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-start flex-col gap-1">
+                              <div className='flex items-center gap-2'>
+                              <span className="font-semibold text-slate-900 dark:text-white">{member.name}</span>
+                              {member.role === 'admin' && (
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                                  <Shield className="w-3.5 h-3.5" />
+                                  Admin
+                                </span>
+                              )}
+                              </div>
+                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                Joined {new Date(member.joinedAt).toLocaleDateString()}
+                              </p>
+                            </div>
+
+                            {/* Only show dropdown for admins and not for the group owner or current user */}
+                            {isCurrentUserAdmin && member.userId !== group.owner && member.userId !== currentUserId && (
+                              <div className="dropdown">
+                                <Dropdown
+                                  placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
+                                  btnClassName="dark:bg-slate-800 hover:bg-primary-light rounded-full w-8 h-8 !flex justify-center items-center"
+                                  button={<IconHorizontalDots className="hover:text-primary opacity-70" />}
+                                >
+                                  <ul className="text-black dark:text-white-dark w-48">
+                                    {member.role !== 'admin' && (
+                                      <li>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleMakeAdmin(member.userId)}
+                                          className="w-full flex items-center px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800"
+                                        >
+                                          <Shield className="w-4 h-4 mr-2 text-purple-500" />
+                                          Make Admin
+                                        </button>
+                                      </li>
+                                    )}
+                                    <li>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleRemoveMember(member.userId)}
+                                        className="w-full flex items-center px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-red-600 dark:text-red-400"
+                                      >
+                                        <IconLogout className="w-4 h-4 mr-2" />
+                                        Remove Member
+                                      </button>
+                                    </li>
+                                  </ul>
+                                </Dropdown>
+                              </div>
                             )}
                           </div>
-                          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-                            Joined {new Date(member.joinedAt).toLocaleDateString()}
-                          </p>
                         </div>
                       </div>
                     ))
@@ -156,7 +196,7 @@ export default function GroupSettings({ group, currentUserId, onAddMember, onLea
         title="Add New Member">
         <AddMemberForm
           onSubmit={handleAddMemberSubmit}
-          onClose={() => setIsAddMemberModalOpen(false)}/>
+          onClose={() => setIsAddMemberModalOpen(false)} />
       </Modal>
     </>
   );
