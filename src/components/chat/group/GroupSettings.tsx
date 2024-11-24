@@ -20,6 +20,8 @@ interface GroupSettingsProps {
 export default function GroupSettings({ group, currentUserId, onAddMember, onLeaveGroup, isRtl }: GroupSettingsProps) {
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+
 
   const isCurrentUserAdmin = group.members.some(
     (member) => member.userId === currentUserId && member.role === 'admin'
@@ -42,6 +44,14 @@ export default function GroupSettings({ group, currentUserId, onAddMember, onLea
     setIsAddMemberModalOpen(false);
     // You would typically handle the form data here and make an API call
     console.log('Adding member:', data);
+  };
+
+  const handleRemoveMember = (userId: string) => {
+    setSelectedMemberId(userId);
+  };
+
+  const handleMakeAdmin = (userId: string) => {
+    setSelectedMemberId(userId);
   };
 
   return (
