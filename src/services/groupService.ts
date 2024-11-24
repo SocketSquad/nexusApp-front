@@ -1,9 +1,11 @@
+import { Message } from 'yup/lib/types';
 import api from '../config/axios';
 import { Group, GroupMember } from '../types/chat';
 
+
 export class GroupService {
   private static instance: GroupService;
-  private readonly baseUrl = '/api/groups';
+  private readonly baseUrl = '/groups';
 
   private constructor() {}
 
@@ -19,13 +21,23 @@ export class GroupService {
     return data;
   }
 
+  async getGroupById(groupId: string): Promise<Group[]> {
+    const { data } = await api.get<Group[]>(`${this.baseUrl}/${groupId}`);
+    return data;
+  }
+
   async createGroup(groupData: Partial<Group>): Promise<Group> {
-    const { data } = await api.post<Group>(this.baseUrl, groupData);
+    const { data} = await api.post<Group>(this.baseUrl, groupData);
     return data;
   }
 
   async updateGroup(groupId: string, updates: Partial<Group>): Promise<Group> {
-    const { data } = await api.patch<Group>(`${this.baseUrl}/${groupId}`, updates);
+    const { data } = await api.put<Group>(`${this.baseUrl}/${groupId}`, updates);
+    return data;
+  }
+
+  async deleteGroup(groupId: string): Promise<Group> {
+    const { data } = await api.delete<Group>(`${this.baseUrl}/${groupId}`);
     return data;
   }
 
@@ -36,6 +48,16 @@ export class GroupService {
   async removeMember(groupId: string, userId: string): Promise<void> {
     await api.delete(`${this.baseUrl}/${groupId}/members/${userId}`);
   }
+
+  async updateMemberRole(groupId: string, userId: string,role: string): Promise<void> {
+    await api.put(`${this.baseUrl}/${groupId}/members/${userId}/role`,{role});
+  }
+
+  async sendMessage(groupId: string, content: string) : Promise<Message> {
+    const {data} =await api.post(`${this.baseUrl}/${groupId}/messages`,{content});
+    return data;
+  }
+
 }
 
 export const groupService = GroupService.getInstance();

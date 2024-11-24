@@ -8,6 +8,7 @@ import Dropdown from '../../Dropdown';
 import IconHorizontalDots from '../../../components/Icon/IconHorizontalDots';
 import IconUserPlus from '../../Icon/IconUserPlus';
 import IconLogout from '../../Icon/IconLogout';
+import { groupService } from '../../../services/groupService';
 
 interface GroupSettingsProps {
   group: Group;
@@ -20,39 +21,47 @@ interface GroupSettingsProps {
 export default function GroupSettings({ group, currentUserId, onAddMember, onLeaveGroup, isRtl }: GroupSettingsProps) {
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
-
 
   const isCurrentUserAdmin = group.members.some(
-    (member) => member.userId === currentUserId && member.role === 'admin'
+    
+    (member) => member.userId._id === currentUserId && member.role === 'admin'
   );
+  console.log("currentUserId",currentUserId);
+
+  console.log("group.members",group.members);
 
   const sortedMembers = [...group.members].sort((a, b) => {
     // Sort admins first
     if (a.role === 'admin' && b.role !== 'admin') return -1;
     if (a.role !== 'admin' && b.role === 'admin') return 1;
     // Then sort by name
-    return a.name.localeCompare(b.name);
+    return a.userId.username.localeCompare(b.userId.username);
   });
 
+  console.log("group ",group);
+
   const filteredMembers = sortedMembers.filter(member =>
-    member.name.toLowerCase().includes(searchQuery.toLowerCase())
+    member.userId.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleAddMemberSubmit = (data: { email: string; role: 'admin' | 'member' }) => {
     onAddMember();
     setIsAddMemberModalOpen(false);
     // You would typically handle the form data here and make an API call
+
     console.log('Adding member:', data);
   };
 
-  const handleRemoveMember = (userId: string) => {
-    setSelectedMemberId(userId);
-  };
+  const handleMakeAdmin =async (memberId) =>{
+     await groupService.updateMemberRole(group._id,memberId,'admin');
+     
+  }
 
-  const handleMakeAdmin = (userId: string) => {
-    setSelectedMemberId(userId);
-  };
+  const handleRemoveMember = async(memberId) =>{
+    await groupService.removeMember(group._id,memberId);
+  }
+
+
 
   return (
     <>
@@ -119,16 +128,16 @@ export default function GroupSettings({ group, currentUserId, onAddMember, onLea
                   {filteredMembers.length > 0 ? (
                     filteredMembers.map((member) => (
                       <div
-                        key={member.userId}
+                        key={member.userId._id}
                         className="flex items-center p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-md transition-all duration-200 border border-slate-100 dark:border-slate-800"
                       >
                         <div className="relative">
                           <img
-                            src={member.avatar || `https://source.unsplash.com/100x100/?portrait&${member.userId}`}
-                            alt={member.name}
+                            src={member.avatar || `https://source.unsplash.com/100x100/?portrait&${member.userId._id}`}
+                            alt={member.userId.username}
                             className="w-12 h-12 rounded-full object-cover ring-2 ring-white dark:ring-slate-800 shadow-sm"
                           />
-                          {member.userId === group.owner && (
+                          {member.userId._id === group.owner._id && (
                             <Crown className="w-5 h-5 text-yellow-500 absolute -top-1 -right-1 drop-shadow-sm" />
                           )}
                         </div>
@@ -136,7 +145,7 @@ export default function GroupSettings({ group, currentUserId, onAddMember, onLea
                           <div className="flex items-center justify-between">
                             <div className="flex items-start flex-col gap-1">
                               <div className='flex items-center gap-2'>
-                              <span className="font-semibold text-slate-900 dark:text-white">{member.name}</span>
+                              <span className="font-semibold text-slate-900 dark:text-white">{member.userId.username}</span>
                               {member.role === 'admin' && (
                                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
                                   <Shield className="w-3.5 h-3.5" />
@@ -150,7 +159,7 @@ export default function GroupSettings({ group, currentUserId, onAddMember, onLea
                             </div>
 
                             {/* Only show dropdown for admins and not for the group owner or current user */}
-                            {isCurrentUserAdmin && member.userId !== group.owner && member.userId !== currentUserId && (
+                            {isCurrentUserAdmin && member.userId._id !== group.owner._idr && member.userId._id !== currentUserId && (
                               <div className="dropdown">
                                 <Dropdown
                                   placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
@@ -162,7 +171,7 @@ export default function GroupSettings({ group, currentUserId, onAddMember, onLea
                                       <li>
                                         <button
                                           type="button"
-                                          onClick={() => handleMakeAdmin(member.userId)}
+                                          onClick={() => handleMakeAdmin(member.userId._id)}
                                           className="w-full flex items-center px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800"
                                         >
                                           <Shield className="w-4 h-4 mr-2 text-purple-500" />
@@ -173,7 +182,7 @@ export default function GroupSettings({ group, currentUserId, onAddMember, onLea
                                     <li>
                                       <button
                                         type="button"
-                                        onClick={() => handleRemoveMember(member.userId)}
+                                        onClick={() => handleRemoveMember(member.userId._id)}
                                         className="w-full flex items-center px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-red-600 dark:text-red-400"
                                       >
                                         <IconLogout className="w-4 h-4 mr-2" />

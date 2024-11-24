@@ -10,4 +10,13 @@ export default defineConfig({
             '@': path.resolve(__dirname, './src'),
         },
     },
+    test: {
+        globals: true,
+        environment: 'jsdom',
+        coverage: {
+            provider: 'istanbul', // or 'c8'
+            reporter: ['text', 'json', 'html'],
+            reportsDirectory: './coverage'
+        },
+    },
 });

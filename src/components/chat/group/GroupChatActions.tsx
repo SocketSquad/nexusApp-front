@@ -15,19 +15,23 @@ interface GroupData {
     name: string;
     description: string;
     privacy: 'public' | 'private';
-    avatar?: string;
+    // avatar?: string;
 }
 
 interface IGroupChatActionsProps {
     isRtl: boolean;
     currentGroup?: GroupData;
     onUpdateGroup?: (groupId: string, data: FormData) => Promise<void>;
+    onDeleteGroup:(groupId: string) => Promise<void>,
 }
+
+
 
 const GroupChatActions = ({ 
     isRtl, 
     currentGroup,
-    onUpdateGroup 
+    onUpdateGroup,
+    onDeleteGroup
 }: IGroupChatActionsProps) => {
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const navigate = useNavigate();
@@ -50,7 +54,9 @@ const GroupChatActions = ({
                     >
                         <ul className="text-black dark:text-white-dark">
                             <li>
-                                <button type="button">
+                                <button type="button"
+                                 onClick={() => currentGroup && onDeleteGroup && onDeleteGroup(currentGroup.id)}
+                                >                                  
                                     <IconTrashLines className="w-4.5 h-4.5 ltr:mr-2 rtl:ml-2 shrink-0" />
                                     Delete
                                 </button>
