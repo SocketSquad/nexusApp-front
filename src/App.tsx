@@ -2,11 +2,12 @@ import { PropsWithChildren, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from './store';
 import { toggleRTL, toggleTheme, toggleAnimation } from './store/themeConfigSlice';
+import { Toaster } from 'sonner';
 
 function App({ children }: PropsWithChildren) {
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const dispatch = useDispatch();
-
+    
     useEffect(() => {
         dispatch(toggleTheme(localStorage.getItem('theme') || themeConfig.theme));
         dispatch(toggleRTL(localStorage.getItem('rtlClass') || themeConfig.rtlClass));
@@ -17,6 +18,7 @@ function App({ children }: PropsWithChildren) {
         <div
             className={`${themeConfig.rtlClass} main-section antialiased relative font-nunito text-sm font-normal`}
         >
+             <Toaster richColors />
             {children}
         </div>
     );

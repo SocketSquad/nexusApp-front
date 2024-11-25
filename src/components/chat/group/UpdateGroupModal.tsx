@@ -5,45 +5,46 @@ interface GroupData {
   id: string;
   name: string;
   description: string;
-  privacy: 'public' | 'private';
-  avatar?: string;
+  // privacy: 'public' | 'private';
 }
 
 interface UpdateGroupModalProps {
   isOpen: boolean;
   onClose: () => void;
-  group: GroupData;
+  group: GroupData; // Accept the currentGroup directly
   onUpdate: (groupId: string, data: FormData) => Promise<void>;
 }
 
-const UpdateGroupModal = ({ isOpen, onClose, group, onUpdate }: UpdateGroupModalProps) => {
+const UpdateGroupModal = ({
+  isOpen,
+  onClose,
+  group,
+  onUpdate,
+}: UpdateGroupModalProps) => {
   const [loading, setLoading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string>('');
+  const [previewUrl, setPreviewUrl] = useState<string>(group.avatar || '');
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    privacy: 'public' as 'public' | 'private',
-    avatar: null as File | null,
+    name: group.name,
+    description: group.description,
+    privacy: group.privacy,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Initialize form with group data
+  // Sync the modal's state with the group prop when it changes
   useEffect(() => {
     if (group) {
       setFormData({
         name: group.name,
         description: group.description,
         privacy: group.privacy,
-        avatar: null,
       });
-      setPreviewUrl(group.avatar || '');
+      // setPreviewUrl(group.avatar || '');
     }
   }, [group]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setFormData(prev => ({ ...prev, avatar: file }));
       setPreviewUrl(URL.createObjectURL(file));
     }
   };
@@ -51,9 +52,8 @@ const UpdateGroupModal = ({ isOpen, onClose, group, onUpdate }: UpdateGroupModal
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
-      // Validation
       const newErrors: Record<string, string> = {};
       if (!formData.name.trim()) {
         newErrors.name = 'Group name is required';
@@ -64,14 +64,13 @@ const UpdateGroupModal = ({ isOpen, onClose, group, onUpdate }: UpdateGroupModal
         return;
       }
 
-      // Create FormData object for multipart/form-data
       const updateData = new FormData();
       updateData.append('name', formData.name);
       updateData.append('description', formData.description);
       updateData.append('privacy', formData.privacy);
-      if (formData.avatar) {
-        updateData.append('avatar', formData.avatar);
-      }
+      // if (previewUrl !== group.avatar) {
+      //   updateData.append('avatar', previewUrl); // Assuming avatar is a file
+      // }
 
       await onUpdate(group.id, updateData);
       onClose();

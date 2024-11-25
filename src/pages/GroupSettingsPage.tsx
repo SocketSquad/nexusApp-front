@@ -1,80 +1,51 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GroupSettings from '../components/chat/group/GroupSettings';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import type { Group } from '../types/chat';
+import { groupService } from '../services/groupService';
+import { useParams} from 'react-router-dom';
 
-const mockGroup: Group = {
-  id: '1',
-  name: 'Design Team',
-  owner: 'user1',
-  members: [
-    {
-      userId: 'user1',
-      name: 'Sarah Wilson',
-      role: 'admin',
-      joinedAt: new Date('2024-01-15'),
-      lastRead: new Date(),
-      avatar: 'https://source.unsplash.com/100x100/?portrait&1'
-    },
-    {
-      userId: 'user2',
-      name: 'Mike Johnson',
-      role: 'admin',
-      joinedAt: new Date('2024-01-16'),
-      lastRead: new Date(),
-      avatar: 'https://source.unsplash.com/100x100/?portrait&2'
-    },
-    {
-      userId: 'user3',
-      name: 'Emily Brown',
-      role: 'member',
-      joinedAt: new Date('2024-02-01'),
-      lastRead: new Date(),
-      avatar: 'https://source.unsplash.com/100x100/?portrait&3'
-    },
-    {
-      userId: 'user4',
-      name: 'David Lee',
-      role: 'member',
-      joinedAt: new Date('2024-02-15'),
-      lastRead: new Date(),
-      avatar: 'https://source.unsplash.com/100x100/?portrait&4'
-    },
-    {
-      userId: 'user6',
-      name: 'Emily Brown',
-      role: 'member',
-      joinedAt: new Date('2024-02-01'),
-      lastRead: new Date(),
-      avatar: 'https://source.unsplash.com/100x100/?portrait&3'
-    },
-    {
-      userId: 'user7',
-      name: 'David Lee',
-      role: 'member',
-      joinedAt: new Date('2024-02-15'),
-      lastRead: new Date(),
-      avatar: 'https://source.unsplash.com/100x100/?portrait&4'
-    }
-  ],
-  privacy: 'private',
-  lastActivityAt: new Date(),
-  description: 'Official design team group for project collaboration'
-};
 
 interface GroupSettingsPageProps {
   isRtl?: boolean;
 }
 
 const GroupSettingsPage = ({ isRtl }: GroupSettingsPageProps) => {
-  const navigate = useNavigate();
+
+  const [group, setGroup] = useState<Group | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  
+
+  const { groupId } = useParams(); // Replace with dynamic ID if needed (e.g., from URL params)
+
+  console.log("groupId",groupId)
+  useEffect(() => {
+    const fetchGroupDetails = async () => {
+      try {
+        setIsLoading(true);
+        const fetchedGroup = await groupService.getGroupById(groupId);
+        setGroup(fetchedGroup);
+        console.log('fetchedGroup',fetchedGroup);
+      } catch (err) {
+        console.error('Error fetching group details:', err);
+        setError('Failed to load group details');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchGroupDetails();
+  }, [groupId]);
+
+
   const handleAddMember = () => {
     console.log('Add member clicked');
   };
 
-  const handleLeaveGroup = () => {
-    console.log('Leave group clicked');
+  const handleLeaveGroup = async () => {
+    await groupService.removeMember(groupId,'673ce6a5182f2c76a8954465');
   };
 
   const handleBack = () => {
